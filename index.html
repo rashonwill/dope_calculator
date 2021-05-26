@@ -1,0 +1,365 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+
+<div class = "calculator">
+  
+    <div class="display" id="results">      
+            <div class="held-label" ></div>
+            <div class="held-value"></div>
+            <div class="next-operation"></div>
+            <div class="next-value"></div>    
+    </div>
+   
+    
+    <div class="buttons-clear">
+      <button class="clear-all"> CLEAR </button>
+      <button class="clear-entry"> CLEAR ENTRY </button>
+      
+    </div>
+    
+    <div class="math-symbols">
+      <button id="math" class="add">&plus;</button>
+      <button id="math" class="subtract">&minus;</button>
+      <button id="math"class="multiply">&times;</button>
+      <button id="math"class="divide">&divide;</button>
+      <button id="math-equals"class="equals">&equals;</button>
+    </div>
+    
+    
+    
+    
+    <div class="numbers">
+      
+      <button id="digit">7</button>
+      <button id="digit">8</button>
+      <button id="digit">9</button>
+      
+      <button id="digit">4</button>
+      <button id="digit">5</button>
+      <button id="digit">6</button>
+      
+      <button id="digit">1</button>
+      <button id="digit">2</button>
+      <button id="digit">3</button>   
+      
+       <button id="digit">&period;</button>
+      <button id="zero">0</button> 
+      
+    </div>
+    
+  </div>
+
+  <style>
+
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif:wght@700&family=Roboto:wght@300&display=swap');
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  /*background: #100a1c;*/
+  background: linear-gradient(black, whitesmoke);
+  background:url(./images/Huey-Boondocs.jpg);
+
+}
+
+.calculator{
+  margin-top: 50px;  
+  background: rgba(42,50,113, .8);
+  background: rgba(19, 19, 19, .9);
+  margin: 1rem auto;
+  width: 400px;
+  height: 650px;
+  border: 5px solid black;
+  border-radius: 10px;
+  margin-top: 120px;
+
+}
+
+.display{
+  background: rgba(19, 19, 19, .7);
+  margin: 1rem auto;
+  width: 90%;
+  height: 100px;
+  border: 3px solid black;
+  border-radius: 10px;
+  font-size: 32px;
+  color: rgba(198, 32, 82);
+  overflow: hidden;
+  font-size: 70px;
+  font-weight: bold;
+  text-align: right;
+  padding: 10px;
+  display: flex;
+  justify-content:center;
+  
+}
+
+
+
+
+button{
+  color: rgba(92, 200, 255);
+  cursor: pointer;
+  border: none;
+  font-weight:  bold;
+}
+
+button:hover{
+  transform: scale(1.1);
+  
+}
+.buttons-clear{
+ margin-left: -2px; 
+}
+
+.clear-all{
+  width: 140px;
+  height: 70px;
+  background: grey;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 10px; 
+  margin: 5px;
+  font-family: "PT Serif";
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.clear-entry{
+  width: 140px;
+  height: 70px;
+  background: grey;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 10px; 
+  margin: 5px;
+  font-family: "PT Serif";
+  font-weight: bold;
+  font-size: 17px;
+}
+
+
+.math-symbols{
+  margin-top: -92px;
+  display: grid;
+  float: right;
+  padding-right: 20px;
+  
+}
+
+#math{
+  margin: 1rem auto;
+  width: 80px;
+  height: 70px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(42,50,113, .75);
+  background: transparent;
+  color: rgba(198, 32, 82);
+  font-family: "PT Serif";
+  font-weight: bold;
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+#math-equals{
+  margin: 1rem auto;
+  width: 80px;
+  height: 70px;
+  border: none;
+  border-radius: 10px;
+  background: #ae4843;
+  background: transparent;
+  color: rgba(198, 32, 82);
+  font-family: "PT Serif";
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.numbers{
+  margin-left: 25px;
+  
+}
+#digit{
+  margin: 1.5rem auto;
+  width: 80px;
+  height: 65px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-family: "PT Serif";
+  font-weight: bold;
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+
+#zero{
+  margin: 5px;
+  width: 160px;
+  height: 65px;
+  border: none;
+  border-radius: 10px;
+  background: whitesmoke;
+  background: transparent;
+  font-family: "PT Serif";
+  font-weight: bold;
+  font-size: 30px;
+}
+
+
+  </style>
+  
+  
+
+
+  <script>
+
+
+let heldValue = null;
+let heldOperation  = null;
+let nextValue = null;
+$('.held-label').text('0');
+
+
+$(".numbers button").click(function () {  
+  if(nextValue == null) {
+     nextValue = '0';
+  }
+   
+  let digit = $(this).text(); 
+  nextValue = nextValue + digit; 
+  $('.held-label').text('');
+
+  updateDisplay();
+  
+ 
+  });
+
+function showValue(location, value) { 
+   if(value == null) {
+    $(location).text('');
+   }
+   else {
+     $(location).text(Number(value));
+   }
+   
+ };
+
+
+function updateDisplay() {
+  showValue('.held-value', heldValue)
+  showValue('.next-value', nextValue)
+  
+};
+
+
+
+function clearAll(){
+   heldValue = null;
+   heldOperator  = null;
+   nextValue = null;
+  $('.held-label').text('0');
+};
+
+function clearEntry(){
+    nextValue = null;
+  $('.held-label').text('');
+};
+
+$('.clear-all').click(function() {
+  clearAll()
+  $('.next-operation').text('')
+  updateDisplay()
+});
+
+$('.clear-entry').click(function() {
+  clearEntry()
+  updateDisplay()
+});
+
+function add (x, y) {
+  return Number(x) + Number(y)
+};
+
+function subtract (x, y) {
+  return Number(x) - Number(y)
+};
+
+function multiply (x, y) {
+  return Number(x) * Number(y)
+};
+
+function divide (x, y) {
+  return Number(x) / Number(y)
+};
+
+
+function setHeldOperation(operation) {
+  if(heldOperation !== null){
+    heldValue = heldOperation(heldValue, nextValue);
+  }
+  else if(nextValue !== null && !heldOperation){ 
+   heldValue = nextValue; 
+    
+    
+  }
+  nextValue = null;
+  heldOperation = operation;
+  
+};
+
+$('.add').click(function () {
+ setHeldOperation(add);
+  $('.next-operation').text('+');
+  updateDisplay();
+  
+});
+
+$('.subtract').click(function(){
+ setHeldOperation(subtract);
+  $('.next-operation').text('-');
+  updateDisplay();
+  
+});
+
+$('.multiply').click(function(){
+ setHeldOperation(multiply);
+  $('.next-operation').text('*');
+  updateDisplay();
+  
+});
+
+
+$('.divide').click(function(){
+ setHeldOperation(divide);
+  $('.next-operation').text('/');
+  updateDisplay();
+  
+});
+
+$('.equals').click(function(){
+ setHeldOperation(null);
+  $('.next-operation').text('');
+  updateDisplay();
+  
+});
+
+
+
+
+
+
+ 
+
+
+
+  </script>
